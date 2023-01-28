@@ -1,5 +1,5 @@
 ﻿namespace SourceGenerators.Queries;
-public class Class1
+public class QueriesRootType
 {
 
 }
