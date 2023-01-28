@@ -4,6 +4,21 @@ namespace SourceGenerators.Generators
 {
     public static class SourceGenerationHelper
     {
+        public static string CQRSExtensions(string ns)
+        {
+            return @$"namespace {ns}
+{{
+    public static class CQRSDependencyInjectionExtensions {{
+
+        public static void UseCQRS(this IServiceCollection services)
+        {{
+
+        }}
+
+    }}
+}}";
+        }
+
         public const string Attribute = @"
 namespace NetEscapades.EnumGenerators
 {

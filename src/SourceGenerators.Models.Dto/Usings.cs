@@ -1,0 +1,1 @@
+﻿global using SourceGenerators.Common.CQRS;
