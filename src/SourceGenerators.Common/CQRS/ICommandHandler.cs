@@ -4,5 +4,5 @@ public interface ICommandHandler<TRequest, TResponse>
     where TRequest : class, ICommand<TRequest, TResponse>
     where TResponse : class
 {
-    Task<TResponse> HandleAsync(TRequest request, CancellationToken cancellationToken);
+    Task<TResponse> HandleAsync(TRequest request, ICurrentUserContext currentUserContext, CancellationToken cancellationToken);
 }

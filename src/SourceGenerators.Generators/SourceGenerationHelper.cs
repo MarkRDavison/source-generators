@@ -4,6 +4,21 @@ namespace SourceGenerators.Generators
 {
     public static class SourceGenerationHelper
     {
+
+        public const string UseCQRSAttribute = @"
+namespace SourceGenerators.Generators;
+
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+public class UseCQRSAttribute : Attribute
+{
+    public Type[] Types { get; set; }
+
+    public UseCQRSAttribute(params Type[] types) {
+       this.Types = types;
+    }
+}
+";
+
         public static string CQRSExtensions(string ns)
         {
             return @$"namespace {ns}

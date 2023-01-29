@@ -2,7 +2,7 @@
   "profiles": {
     "Profile 1": {
       "commandName": "DebugRoslynComponent",
-      "targetProject": "..\\SourceGenerators.Test\\SourceGenerators.Test.csproj"
+      "targetProject": "..\\SourceGenerators.Api\\SourceGenerators.Api.csproj"
     }
   }
 }
