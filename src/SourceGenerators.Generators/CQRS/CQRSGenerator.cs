@@ -105,11 +105,14 @@ public class CQRSGenerator : ISourceGenerator
                 diNamespaces.Add(GetNamespace(commandInterface.TypeArguments[0]));
                 diNamespaces.Add(GetNamespace(commandInterface.TypeArguments[1]));
 
+                var requestAttribute = symbol.GetAttributes().FirstOrDefault(_ => _.AttributeClass?.Name?.EndsWith("PostRequestAttribute") ?? false);
+
                 activities.Add(new CQRSActivity
                 {
                     Type = CQRSActivityType.Command,
                     Request = commandInterface.TypeArguments[0].Name, // TODO: Fully qualified?
-                    Response = commandInterface.TypeArguments[1].Name// TODO: Fully qualified?
+                    Response = commandInterface.TypeArguments[1].Name, // TODO: Fully qualified?
+                    Path = requestAttribute?.NamedArguments.First(_ => _.Key == "Path").Value.Value as string ?? string.Empty
                 });
             }
             if (queryInterface != null && queryHandler != null)
@@ -119,12 +122,16 @@ public class CQRSGenerator : ISourceGenerator
                 diNamespaces.Add(GetNamespace(queryHandler));
                 diNamespaces.Add(GetNamespace(queryInterface.TypeArguments[0]));
                 diNamespaces.Add(GetNamespace(queryInterface.TypeArguments[1]));
-                activities.Add(new CQRSActivity
+                diNamespaces.Add("Microsoft.AspNetCore.Mvc");
 
+                var requestAttribute = symbol.GetAttributes().FirstOrDefault(_ => _.AttributeClass?.Name?.EndsWith("GetRequestAttribute") ?? false);
+
+                activities.Add(new CQRSActivity
                 {
                     Type = CQRSActivityType.Query,
                     Request = queryInterface.TypeArguments[0].Name, // TODO: Fully qualified?
-                    Response = queryInterface.TypeArguments[1].Name// TODO: Fully qualified?
+                    Response = queryInterface.TypeArguments[1].Name, // TODO: Fully qualified?
+                    Path = requestAttribute?.NamedArguments.First(_ => _.Key == "Path").Value.Value as string ?? string.Empty
                 });
             }
         }
@@ -161,8 +168,8 @@ public class CQRSGenerator : ISourceGenerator
             if (activity.Type == CQRSActivityType.Command)
             {
                 stringBuilder.AppendLine("            endpoints.MapPost(");
-                stringBuilder.AppendLine("                \"/api/todo\",");
-                stringBuilder.AppendLine("                async (HttpContext context, CancellationToken cancellationToken) =>");
+                stringBuilder.AppendLine($"                \"/api/{activity.Path}\",");
+                stringBuilder.AppendLine("                async (HttpContext context, [FromServices] ICommandDispatcher commandDispatcher, CancellationToken cancellationToken) =>");
                 stringBuilder.AppendLine("                {");
                 stringBuilder.AppendLine("                    await Task.CompletedTask;");
                 stringBuilder.AppendLine("                    return true;");
@@ -171,7 +178,13 @@ public class CQRSGenerator : ISourceGenerator
             }
             else if (activity.Type == CQRSActivityType.Query)
             {
-
+                stringBuilder.AppendLine("            endpoints.MapGet(");
+                stringBuilder.AppendLine($"                \"/api/{activity.Path}\",");
+                stringBuilder.AppendLine("                async (HttpContext context, [FromServices] IQueryDispatcher queryDispatcher, CancellationToken cancellationToken) =>");
+                stringBuilder.AppendLine("                {");
+                stringBuilder.AppendLine("                    await Task.CompletedTask;");
+                stringBuilder.AppendLine("                    return true;");
+                stringBuilder.AppendLine("                });");
             }
         }
 
