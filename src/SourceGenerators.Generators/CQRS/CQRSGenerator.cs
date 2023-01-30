@@ -69,16 +69,10 @@ public class CQRSGenerator : ISourceGenerator
         var commandHandlers = new HashSet<string>();
         var queryHandlers = new HashSet<string>();
         diNamespaces.Add("Microsoft.Extensions.DependencyInjection");
-        diNamespaces.Add("SourceGenerators.Common.CQRS");
+        diNamespaces.Add("SourceGenerators.Common.CQRS"); // TODO: Replace when transferring to dotnet common
 
         foreach (var symbol in symbols)
         {
-            //if (symbol.GetAttributes().Any(_ => _.AttributeClass.Name == "UseCQRSAttribute"))
-            //{
-            //
-            //}
-
-
             var commandInterface = symbol.Interfaces.FirstOrDefault(_ => _.Name.Equals("ICommand") && _.TypeArguments.Length == 2);
             var queryInterface = symbol.Interfaces.FirstOrDefault(_ => _.Name.Equals("IQuery") && _.TypeArguments.Length == 2);
             var commandHandler = symbols.FirstOrDefault(_ =>
@@ -163,7 +157,7 @@ public class CQRSGenerator : ISourceGenerator
         stringBuilder.AppendLine("        {");
         stringBuilder.AppendLine(string.Empty);
 
-        foreach (var activity in activities)
+        foreach (var activity in activities.Where(_ => !string.IsNullOrEmpty(_.Path)))
         {
             if (activity.Type == CQRSActivityType.Command)
             {
