@@ -116,7 +116,6 @@ public class CQRSGenerator : ISourceGenerator
                 diNamespaces.Add(GetNamespace(queryHandler));
                 diNamespaces.Add(GetNamespace(queryInterface.TypeArguments[0]));
                 diNamespaces.Add(GetNamespace(queryInterface.TypeArguments[1]));
-                diNamespaces.Add("Microsoft.AspNetCore.Mvc");
 
                 var requestAttribute = symbol.GetAttributes().FirstOrDefault(_ => _.AttributeClass?.Name?.EndsWith("GetRequestAttribute") ?? false);
 
@@ -163,7 +162,7 @@ public class CQRSGenerator : ISourceGenerator
             {
                 stringBuilder.AppendLine("            endpoints.MapPost(");
                 stringBuilder.AppendLine($"                \"/api/{activity.Path}\",");
-                stringBuilder.AppendLine("                async (HttpContext context, [FromServices] ICommandDispatcher commandDispatcher, CancellationToken cancellationToken) =>");
+                stringBuilder.AppendLine("                async (HttpContext context, CancellationToken cancellationToken) =>");
                 stringBuilder.AppendLine("                {");
                 stringBuilder.AppendLine("                    await Task.CompletedTask;");
                 stringBuilder.AppendLine("                    return true;");
@@ -175,7 +174,7 @@ public class CQRSGenerator : ISourceGenerator
             {
                 stringBuilder.AppendLine("            endpoints.MapGet(");
                 stringBuilder.AppendLine($"                \"/api/{activity.Path}\",");
-                stringBuilder.AppendLine("                async (HttpContext context, [FromServices] IQueryDispatcher queryDispatcher, CancellationToken cancellationToken) =>");
+                stringBuilder.AppendLine("                async (HttpContext context, CancellationToken cancellationToken) =>");
                 stringBuilder.AppendLine("                {");
                 stringBuilder.AppendLine("                    await Task.CompletedTask;");
                 stringBuilder.AppendLine("                    return true;");
