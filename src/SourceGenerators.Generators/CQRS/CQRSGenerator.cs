@@ -33,14 +33,14 @@ public class CQRSGenerator : ISourceGenerator
     {
         context.AddSource("UseCQRSAttribute.g.cs", SourceText.From(SourceGenerationHelper.UseCQRSAttribute, Encoding.UTF8));
 
-        var currnsmembers = context.Compilation.SourceModule.GlobalNamespace
+        var assemblyMarkerAttribute = context.Compilation.SourceModule.GlobalNamespace
             .GetNamespaceMembers()
             .SelectMany(GetAllTypes)
             .FirstOrDefault(_ => _
                 .GetAttributes()
                 .Any(__ => __.AttributeClass?.Name == "UseCQRS"));
 
-        if (currnsmembers == null)
+        if (assemblyMarkerAttribute == null)
         {
             return;
         }
