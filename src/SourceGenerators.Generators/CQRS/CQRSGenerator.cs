@@ -175,7 +175,8 @@ public class CQRSGenerator : ISourceGenerator
                 stringBuilder.AppendLine("                async (HttpContext context, CancellationToken cancellationToken) =>");
                 stringBuilder.AppendLine("                {");
                 stringBuilder.AppendLine("                    var dispatcher = context.RequestServices.GetRequiredService<IQueryDispatcher>();");
-                stringBuilder.AppendLine($"                    return await dispatcher.Dispatch<{activity.Request},{activity.Response}>(new {activity.Request}(), cancellationToken);");
+                stringBuilder.AppendLine($"                    var request = await CQRSHelpers.GetRequestFromQuery<{activity.Request},{activity.Response}>(context.Request);");
+                stringBuilder.AppendLine($"                    return await dispatcher.Dispatch<{activity.Request},{activity.Response}>(request, cancellationToken);");
                 stringBuilder.AppendLine("                });");
                 stringBuilder.AppendLine(string.Empty);
             }
