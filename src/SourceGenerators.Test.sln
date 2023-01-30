@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SourceGenerators.Test", "So
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SourceGenerators.Common", "SourceGenerators.Common\SourceGenerators.Common.csproj", "{157B5400-7D64-42EB-97AC-448E68EBB44A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SourceGenerators.Models", "SourceGenerators.Models\SourceGenerators.Models.csproj", "{25BA801B-0935-4DC6-BC1D-F81545F982DD}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SourceGenerators.Generators", "SourceGenerators.Generators\SourceGenerators.Generators.csproj", "{2D769866-903B-43AF-A777-2EE3BD4A884C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E01E1C16-A7AF-4D0B-B7B4-2AFC9D242B69}"
@@ -41,10 +39,6 @@ Global
 		{157B5400-7D64-42EB-97AC-448E68EBB44A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{157B5400-7D64-42EB-97AC-448E68EBB44A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{157B5400-7D64-42EB-97AC-448E68EBB44A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{25BA801B-0935-4DC6-BC1D-F81545F982DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{25BA801B-0935-4DC6-BC1D-F81545F982DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{25BA801B-0935-4DC6-BC1D-F81545F982DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{25BA801B-0935-4DC6-BC1D-F81545F982DD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2D769866-903B-43AF-A777-2EE3BD4A884C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2D769866-903B-43AF-A777-2EE3BD4A884C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D769866-903B-43AF-A777-2EE3BD4A884C}.Release|Any CPU.ActiveCfg = Release|Any CPU

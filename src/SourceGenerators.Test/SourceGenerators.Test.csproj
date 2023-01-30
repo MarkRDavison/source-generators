@@ -20,7 +20,6 @@
   <ItemGroup>
     <ProjectReference Include="..\SourceGenerators.Api\SourceGenerators.Api.csproj" />
     <ProjectReference Include="..\SourceGenerators.Common\SourceGenerators.Common.csproj" />
-    <ProjectReference Include="..\SourceGenerators.Models\SourceGenerators.Models.csproj" />
     <ProjectReference Include="..\SourceGenerators.Queries\SourceGenerators.Queries.csproj" />
   </ItemGroup>
 

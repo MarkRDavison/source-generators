@@ -168,6 +168,7 @@ public class CQRSGenerator : ISourceGenerator
                 stringBuilder.AppendLine("                    await Task.CompletedTask;");
                 stringBuilder.AppendLine("                    return true;");
                 stringBuilder.AppendLine("                });");
+                stringBuilder.AppendLine(string.Empty);
 
             }
             else if (activity.Type == CQRSActivityType.Query)
@@ -179,10 +180,10 @@ public class CQRSGenerator : ISourceGenerator
                 stringBuilder.AppendLine("                    await Task.CompletedTask;");
                 stringBuilder.AppendLine("                    return true;");
                 stringBuilder.AppendLine("                });");
+                stringBuilder.AppendLine(string.Empty);
             }
         }
 
-        stringBuilder.AppendLine(string.Empty);
         stringBuilder.AppendLine("        }");
         stringBuilder.AppendLine(string.Empty);
         stringBuilder.AppendLine("    }");
