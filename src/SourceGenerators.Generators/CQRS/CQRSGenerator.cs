@@ -9,11 +9,8 @@ namespace SourceGenerators.Generators.CQRS;
 [Generator]
 public class CQRSGenerator : ISourceGenerator
 {
-    // determine the namespace the class/enum/struct is declared in, if any
     static string GetNamespace(ITypeSymbol syntax)
     {
-        // If we don't have a namespace at all we'll return an empty string
-        // This accounts for the "default namespace" case
         string nameSpace = string.Empty;
 
         INamespaceSymbol? namespaceSymbol = syntax.ContainingNamespace;
@@ -25,13 +22,13 @@ public class CQRSGenerator : ISourceGenerator
             namespaceSymbol = namespaceSymbol.ContainingNamespace;
         }
 
-        // return the final namespace
         return nameSpace;
     }
 
     public void Execute(GeneratorExecutionContext context)
     {
         context.AddSource("UseCQRSAttribute.g.cs", SourceText.From(SourceGenerationHelper.UseCQRSAttribute, Encoding.UTF8));
+        context.AddSource("ActivityHandlerHelpers.g.cs", SourceText.From(SourceGenerationHelper.ActivityHandlerHelpers("SourceGenerators.Test"), Encoding.UTF8));
 
         var assemblyMarkerAttribute = context.Compilation.SourceModule.GlobalNamespace
             .GetNamespaceMembers()
@@ -164,8 +161,9 @@ public class CQRSGenerator : ISourceGenerator
                 stringBuilder.AppendLine($"                \"/api/{activity.Path}\",");
                 stringBuilder.AppendLine("                async (HttpContext context, CancellationToken cancellationToken) =>");
                 stringBuilder.AppendLine("                {");
-                stringBuilder.AppendLine("                    await Task.CompletedTask;");
-                stringBuilder.AppendLine("                    return true;");
+                stringBuilder.AppendLine("                    var dispatcher = context.RequestServices.GetRequiredService<ICommandDispatcher>();");
+                stringBuilder.AppendLine($"                    var request = await CQRSHelpers.GetRequestFromBody<{activity.Request},{activity.Response}>(context.Request);");
+                stringBuilder.AppendLine($"                    return await dispatcher.Dispatch<{activity.Request},{activity.Response}>(request, cancellationToken);");
                 stringBuilder.AppendLine("                });");
                 stringBuilder.AppendLine(string.Empty);
 
@@ -176,8 +174,8 @@ public class CQRSGenerator : ISourceGenerator
                 stringBuilder.AppendLine($"                \"/api/{activity.Path}\",");
                 stringBuilder.AppendLine("                async (HttpContext context, CancellationToken cancellationToken) =>");
                 stringBuilder.AppendLine("                {");
-                stringBuilder.AppendLine("                    await Task.CompletedTask;");
-                stringBuilder.AppendLine("                    return true;");
+                stringBuilder.AppendLine("                    var dispatcher = context.RequestServices.GetRequiredService<IQueryDispatcher>();");
+                stringBuilder.AppendLine($"                    return await dispatcher.Dispatch<{activity.Request},{activity.Response}>(new {activity.Request}(), cancellationToken);");
                 stringBuilder.AppendLine("                });");
                 stringBuilder.AppendLine(string.Empty);
             }
