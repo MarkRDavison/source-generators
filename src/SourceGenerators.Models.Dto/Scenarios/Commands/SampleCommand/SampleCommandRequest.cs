@@ -4,4 +4,6 @@
 public class SampleCommandRequest : ICommand<SampleCommandRequest, SampleCommandResponse>
 {
     public const string Path = "sample-command";
+
+    public string Name { get; set; } = string.Empty;
 }

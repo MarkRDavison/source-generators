@@ -1,6 +1,11 @@
+global using Microsoft.AspNetCore.Mvc.Testing;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.VisualStudio.TestTools.UnitTesting;
+global using SourceGenerators.Api;
 global using SourceGenerators.Common.CQRS;
 global using SourceGenerators.Models.Dto.Scenarios.Commands.Example1;
 global using SourceGenerators.Models.Dto.Scenarios.Commands.SampleCommand;
 global using SourceGenerators.Models.Dto.Scenarios.Queries;
+global using System.Net.Http.Json;
+global using System.Text;
+global using System.Text.Json;

@@ -4,6 +4,9 @@ public class TestQueryQueryHandler : IQueryHandler<TestQueryRequest, TestQueryRe
 {
     public Task<TestQueryResponse> HandleAsync(TestQueryRequest request, ICurrentUserContext currentUserContext, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        return Task.FromResult(new TestQueryResponse
+        {
+            RequestName = request.Name
+        });
     }
 }

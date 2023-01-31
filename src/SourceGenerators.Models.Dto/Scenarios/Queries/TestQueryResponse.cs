@@ -2,4 +2,5 @@
 
 public class TestQueryResponse
 {
+    public string RequestName { get; set; } = string.Empty;
 }

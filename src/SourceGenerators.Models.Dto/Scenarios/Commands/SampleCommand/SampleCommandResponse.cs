@@ -2,4 +2,5 @@
 
 public class SampleCommandResponse
 {
+    public string RequestName { get; set; } = string.Empty;
 }
