@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SourceGenerators.Commands\SourceGenerators.Commands.csproj" />
+    <ProjectReference Include="..\SourceGenerators.Common.Service\SourceGenerators.Common.Service.csproj" />
     <ProjectReference Include="..\SourceGenerators.Generators\SourceGenerators.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\SourceGenerators.Queries\SourceGenerators.Queries.csproj" />
   </ItemGroup>

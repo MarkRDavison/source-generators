@@ -4,8 +4,6 @@ using System.Text;
 
 namespace SourceGenerators.Generators.CQRS;
 
-
-
 [Generator]
 public class CQRSGenerator : ISourceGenerator
 {
@@ -17,7 +15,6 @@ public class CQRSGenerator : ISourceGenerator
 
         while (!string.IsNullOrEmpty(namespaceSymbol?.Name))
         {
-
             nameSpace = namespaceSymbol!.Name + (string.IsNullOrEmpty(nameSpace) ? "" : ".") + nameSpace;
             namespaceSymbol = namespaceSymbol.ContainingNamespace;
         }
@@ -28,7 +25,6 @@ public class CQRSGenerator : ISourceGenerator
     public void Execute(GeneratorExecutionContext context)
     {
         context.AddSource("UseCQRSAttribute.g.cs", SourceText.From(SourceGenerationHelper.UseCQRSAttribute, Encoding.UTF8));
-        context.AddSource("ActivityHandlerHelpers.g.cs", SourceText.From(SourceGenerationHelper.ActivityHandlerHelpers("SourceGenerators.Test"), Encoding.UTF8));
 
         var assemblyMarkerAttribute = context.Compilation.SourceModule.GlobalNamespace
             .GetNamespaceMembers()
@@ -67,6 +63,7 @@ public class CQRSGenerator : ISourceGenerator
         var queryHandlers = new HashSet<string>();
         diNamespaces.Add("Microsoft.Extensions.DependencyInjection");
         diNamespaces.Add("SourceGenerators.Common.CQRS"); // TODO: Replace when transferring to dotnet common
+        diNamespaces.Add("SourceGenerators.Common.Service.Helpers"); // TODO: Replace when transferring to dotnet common
 
         foreach (var symbol in symbols)
         {
@@ -162,7 +159,7 @@ public class CQRSGenerator : ISourceGenerator
                 stringBuilder.AppendLine("                async (HttpContext context, CancellationToken cancellationToken) =>");
                 stringBuilder.AppendLine("                {");
                 stringBuilder.AppendLine("                    var dispatcher = context.RequestServices.GetRequiredService<ICommandDispatcher>();");
-                stringBuilder.AppendLine($"                    var request = await CQRSHelpers.GetRequestFromBody<{activity.Request},{activity.Response}>(context.Request);");
+                stringBuilder.AppendLine($"                    var request = await RequestHelpers.GetRequestFromBody<{activity.Request},{activity.Response}>(context.Request);");
                 stringBuilder.AppendLine($"                    return await dispatcher.Dispatch<{activity.Request},{activity.Response}>(request, cancellationToken);");
                 stringBuilder.AppendLine("                });");
                 stringBuilder.AppendLine(string.Empty);
@@ -175,7 +172,7 @@ public class CQRSGenerator : ISourceGenerator
                 stringBuilder.AppendLine("                async (HttpContext context, CancellationToken cancellationToken) =>");
                 stringBuilder.AppendLine("                {");
                 stringBuilder.AppendLine("                    var dispatcher = context.RequestServices.GetRequiredService<IQueryDispatcher>();");
-                stringBuilder.AppendLine($"                    var request = CQRSHelpers.GetRequestFromQuery<{activity.Request},{activity.Response}>(context.Request);");
+                stringBuilder.AppendLine($"                    var request = RequestHelpers.GetRequestFromQuery<{activity.Request},{activity.Response}>(context.Request);");
                 stringBuilder.AppendLine($"                    return await dispatcher.Dispatch<{activity.Request},{activity.Response}>(request, cancellationToken);");
                 stringBuilder.AppendLine("                });");
                 stringBuilder.AppendLine(string.Empty);
@@ -247,82 +244,4 @@ public class CQRSGenerator : ISourceGenerator
             }
         }
     }
-
-    //    static ClassDeclarationSyntax? GetSemanticTargetForGeneration(GeneratorSyntaxContext context)
-    //    {
-    //        var symbols = context.SemanticModel.Compilation.SourceModule.ReferencedAssemblySymbols
-    //            .Where(_ => _.Identity.Name.StartsWith("SourceGenerators"))
-    //            .SelectMany(_ =>
-    //            {
-    //                try
-    //                {
-    //                    var main = _.Identity.Name.Split('.').Aggregate(_.GlobalNamespace, (s, c) => s.GetNamespaceMembers().Single(m => m.Name.Equals(c)));
-
-    //                    var types = GetAllTypes(main);
-    //                    foreach (var type in types)
-    //                    {
-    //                        foreach (var syntax in type.DeclaringSyntaxReferences)
-    //                        {
-    //                            if (syntax.GetSyntax() is ClassDeclarationSyntax cds)
-    //                            {
-
-    //                            }
-    //                        }
-    //                    }
-    //                    return types;
-    //                }
-    //                catch
-    //                {
-    //                    return Enumerable.Empty<ITypeSymbol>();
-    //                }
-    //            })
-    //            .ToList();
-
-    //        if (symbols.Any())
-    //        {
-    //        }
-
-    //        List<string> commands = new List<string>();
-
-    //        foreach (var symbol in symbols)// context.SemanticModel.Compilation.SourceModule.ReferencedAssemblySymbols)
-    //        {
-    //            if (symbol.Interfaces.Any(_ => _.Name.Equals("ICommand")))
-    //            {
-    //                commands.Add(symbol.Name);
-    //                continue;
-    //            }
-    //        }
-
-    //        var classDeclarationSyntax = (ClassDeclarationSyntax)context.Node;
-
-    //        foreach (AttributeListSyntax attributeListSyntax in classDeclarationSyntax.AttributeLists)
-    //        {
-    //            foreach (AttributeSyntax attributeSyntax in attributeListSyntax.Attributes)
-    //            {
-    //                if (context.SemanticModel.GetSymbolInfo(attributeSyntax).Symbol is not IMethodSymbol attributeSymbol)
-    //                {
-    //                    continue;
-    //                }
-
-    //                INamedTypeSymbol attributeContainingTypeSymbol = attributeSymbol.ContainingType;
-    //                string fullName = attributeContainingTypeSymbol.ToDisplayString();
-
-    //                if (fullName == "SourceGenerators.Common.CQRS.PostRequestAttribute")
-    //                {
-    //                    return classDeclarationSyntax;
-    //                }
-    //            }
-    //        }
-
-    //        return null;
-    //    }
-
-    //    static void Execute(Compilation compilation, ImmutableArray<ClassDeclarationSyntax> requests, SourceProductionContext context)
-    //    {
-    //        if (requests.IsDefaultOrEmpty)
-    //        {
-    //            // nothing to do yet
-    //            return;
-    //        }
-    //    }
 }

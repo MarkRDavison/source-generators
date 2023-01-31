@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SourceGenerators.Api", "Sou
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SourceGenerators.Queries", "SourceGenerators.Queries\SourceGenerators.Queries.csproj", "{3AC26F9E-68EA-4E48-8900-2CEAD341CA81}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceGenerators.Common.Service", "SourceGenerators.Common.Service\SourceGenerators.Common.Service.csproj", "{81626DFD-BB00-48A0-9E27-FC07E84CA7F3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{3AC26F9E-68EA-4E48-8900-2CEAD341CA81}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AC26F9E-68EA-4E48-8900-2CEAD341CA81}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AC26F9E-68EA-4E48-8900-2CEAD341CA81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81626DFD-BB00-48A0-9E27-FC07E84CA7F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81626DFD-BB00-48A0-9E27-FC07E84CA7F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81626DFD-BB00-48A0-9E27-FC07E84CA7F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81626DFD-BB00-48A0-9E27-FC07E84CA7F3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,7 +72,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{9C61AB63-CD43-4E97-AAD0-01D0518597C8} = {CC9591FC-168B-48B8-8636-23757AC6C34B}
 		{60E649FC-E788-4ACE-A4AB-B6ACC72E0DA4} = {CC9591FC-168B-48B8-8636-23757AC6C34B}
-		{F2E81525-A3BE-43F8-99DC-653A4EBD28F4} = {CC9591FC-168B-48B8-8636-23757AC6C34B}
 		{3AC26F9E-68EA-4E48-8900-2CEAD341CA81} = {CC9591FC-168B-48B8-8636-23757AC6C34B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
