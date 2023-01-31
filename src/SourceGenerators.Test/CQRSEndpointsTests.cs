@@ -83,4 +83,18 @@ public class CQRSEndpointsTests : WebApplicationFactory<Startup>
         Assert.IsNotNull(response);
         Assert.AreEqual(name, response.RequestName);
     }
+
+    [TestMethod]
+    public async Task Example1CommandRequestWorks()
+    {
+        int integer = 15;
+
+        var response = await PostAsync<Example1CommandResponse>(
+            $"/api/{Example1CommandRequest.Path}",
+            new Example1CommandRequest { Integer = integer },
+            true);
+
+        Assert.IsNotNull(response);
+        Assert.AreEqual(integer, response.RequestInteger);
+    }
 }

@@ -2,4 +2,5 @@
 
 public class Example1CommandResponse
 {
+    public int RequestInteger { get; set; }
 }
