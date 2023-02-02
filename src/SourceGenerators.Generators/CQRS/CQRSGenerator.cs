@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
+using System.Collections.Immutable;
 using System.Text;
 
 namespace SourceGenerators.Generators.CQRS;
@@ -24,22 +25,33 @@ public class CQRSGenerator : ISourceGenerator
 
     public void Execute(GeneratorExecutionContext context)
     {
-        context.AddSource("UseCQRSAttribute.g.cs", SourceText.From(SourceGenerationHelper.UseCQRSAttribute, Encoding.UTF8));
-
-        var assemblyMarkerAttribute = context.Compilation.SourceModule.GlobalNamespace
+        var assemblyMarkerClass = context.Compilation.SourceModule.GlobalNamespace
             .GetNamespaceMembers()
             .SelectMany(GetAllTypes)
             .FirstOrDefault(_ => _
                 .GetAttributes()
-                .Any(__ => __.AttributeClass?.Name == "UseCQRS"));
+                .Any(__ => __.AttributeClass?.Name == "UseCQRSAttribute"));
 
-        if (assemblyMarkerAttribute == null)
+        if (assemblyMarkerClass == null)
         {
             return;
         }
 
+        var at = assemblyMarkerClass.GetAttributes().FirstOrDefault(_ => _.AttributeClass?.Name == "UseCQRSAttribute");
+
+        var assemblyMarkerClassNamespace = GetNamespace(assemblyMarkerClass);
+
+        var args = at?.ConstructorArguments.FirstOrDefault();
+        if (args == null)
+        {
+            return;
+        }
+
+        var types = args.Value.Values.Select(_ => _.Value as INamedTypeSymbol).Where(_ => _ != null).Cast<INamedTypeSymbol>().ToList();
+        var namespaces = types.Select(GetNamespace).ToImmutableHashSet();
+
         var symbols = context.Compilation.SourceModule.ReferencedAssemblySymbols
-            .Where(_ => _.Identity.Name.StartsWith("SourceGenerators")) // TODO: Replace with getting the assemblies we are interested in from the UseCQRS attribute
+            .Where(_ => namespaces.Any(__ => _.Identity.Name.StartsWith(__)))
             .SelectMany(_ =>
             {
                 try
@@ -125,13 +137,13 @@ public class CQRSGenerator : ISourceGenerator
 
         if (present)
         {
-            GenerateDepdendencyInjectionExtensions(context, diNamespaces, commandHandlers, queryHandlers);
+            GenerateDepdendencyInjectionExtensions(context, assemblyMarkerClassNamespace, diNamespaces, commandHandlers, queryHandlers);
             diNamespaces.Add("Microsoft.AspNetCore.Builder");
-            GenerateEndpointRouteExtensions(context, diNamespaces, activities);
+            GenerateEndpointRouteExtensions(context, assemblyMarkerClassNamespace, diNamespaces, activities);
         }
     }
 
-    private static void GenerateEndpointRouteExtensions(GeneratorExecutionContext context, HashSet<string> namespaces, List<CQRSActivity> activities)
+    private static void GenerateEndpointRouteExtensions(GeneratorExecutionContext context, string @namespace, HashSet<string> namespaces, List<CQRSActivity> activities)
     {
         StringBuilder stringBuilder = new();
         foreach (var n in namespaces.OrderBy(_ => _))
@@ -140,7 +152,7 @@ public class CQRSGenerator : ISourceGenerator
         }
 
         stringBuilder.AppendLine(string.Empty);
-        stringBuilder.AppendLine("namespace SourceGenerators.Test");
+        stringBuilder.AppendLine($"namespace {@namespace}");
         stringBuilder.AppendLine("{");
         stringBuilder.AppendLine(string.Empty);
         stringBuilder.AppendLine("    public static class GenerateEndpointRouteExtensions");
@@ -187,7 +199,7 @@ public class CQRSGenerator : ISourceGenerator
 
         context.AddSource("CQRSEndpointRouteBuilderExtensions.g.cs", SourceText.From(stringBuilder.ToString(), Encoding.UTF8));
     }
-    private static void GenerateDepdendencyInjectionExtensions(GeneratorExecutionContext context, HashSet<string> diNamespaces, HashSet<string> commandHandlers, HashSet<string> queryHandlers)
+    private static void GenerateDepdendencyInjectionExtensions(GeneratorExecutionContext context, string @namespace, HashSet<string> diNamespaces, HashSet<string> commandHandlers, HashSet<string> queryHandlers)
     {
         StringBuilder stringBuilder = new();
         foreach (var n in diNamespaces.OrderBy(_ => _))
@@ -196,7 +208,7 @@ public class CQRSGenerator : ISourceGenerator
         }
 
         stringBuilder.AppendLine(string.Empty);
-        stringBuilder.AppendLine("namespace SourceGenerators.Test");
+        stringBuilder.AppendLine($"namespace {@namespace}");
         stringBuilder.AppendLine("{");
         stringBuilder.AppendLine(string.Empty);
         stringBuilder.AppendLine("    public static class CQRSDependecyInjectionExtensions");
@@ -223,7 +235,6 @@ public class CQRSGenerator : ISourceGenerator
 
     public void Initialize(GeneratorInitializationContext context)
     {
-
     }
 
     private static IEnumerable<ITypeSymbol> GetAllTypes(INamespaceSymbol root)
