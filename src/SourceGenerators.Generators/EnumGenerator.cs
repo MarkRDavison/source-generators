@@ -14,7 +14,7 @@ public class EnumGenerator : IIncrementalGenerator
         // Add the marker attribute to the compilation
         context.RegisterPostInitializationOutput(ctx => ctx.AddSource(
             "EnumExtensionsAttribute.g.cs",
-            SourceText.From(SourceGenerationHelper.Attribute, Encoding.UTF8)));
+            SourceText.From(SourceGeneratorHelpers.Attribute, Encoding.UTF8)));
 
         // Do a simple filter for enums
         IncrementalValuesProvider<EnumDeclarationSyntax> enumDeclarations = context.SyntaxProvider
@@ -85,7 +85,7 @@ public class EnumGenerator : IIncrementalGenerator
         if (enumsToGenerate.Count > 0)
         {
             // generate the source code and add it to the output
-            string result = SourceGenerationHelper.GenerateExtensionClass(enumsToGenerate);
+            string result = SourceGeneratorHelpers.GenerateExtensionClass(enumsToGenerate);
             context.AddSource("EnumExtensions.g.cs", SourceText.From(result, Encoding.UTF8));
         }
     }
