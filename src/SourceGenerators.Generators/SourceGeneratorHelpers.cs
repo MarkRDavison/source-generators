@@ -3,7 +3,7 @@ using System.Text;
 
 namespace SourceGenerators.Generators;
 
-public static  class SourceGeneratorHelpers
+public static class SourceGeneratorHelpers
 {
     public static string GetNamespace(ITypeSymbol syntax)
     {

@@ -230,11 +230,11 @@ public class CQRSGenerator : ISourceGenerator
         stringBuilder.AppendLine("        {");
         stringBuilder.AppendLine(string.Empty);
 
-        foreach (var command in activities.Where(_ => _.Type == CQRSActivityType.Command)) 
+        foreach (var command in activities.Where(_ => _.Type == CQRSActivityType.Command))
         {
             stringBuilder.AppendLine($"            services.AddScoped<ICommandHandler<{command.Request},{command.Response}>, {command.Handler}>();");
         }
-        foreach (var query in activities.Where(_ => _.Type == CQRSActivityType.Query)) 
+        foreach (var query in activities.Where(_ => _.Type == CQRSActivityType.Query))
         {
             stringBuilder.AppendLine($"            services.AddScoped<IQueryHandler<{query.Request},{query.Response}>, {query.Handler}>();");
         }
